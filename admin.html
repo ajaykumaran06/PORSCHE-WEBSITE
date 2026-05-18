@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porsche Admin — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --bg-2: #111111;
+      --bg-3: #181818;
+      --surface: #1c1c1c;
+      --border: rgba(255,255,255,0.08);
+      --text-primary: #f2f0ed;
+      --text-secondary: rgba(242,240,237,0.55);
+      --text-muted: rgba(242,240,237,0.3);
+      --accent: #9b1a1a;
+      --accent-light: #c43b3b;
+      --accent-warm: #e8d5b0;
+      --green: #1a9b50;
+      --green-light: #22c55e;
+      --yellow: #c49a1a;
+      --font-main: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --sidebar-w: 240px;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* ── GRAIN ── */
+    .grain {
+      position: fixed; inset: 0; z-index: 999; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 120px; opacity: 0.35; mix-blend-mode: overlay;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: var(--bg-2);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 1.5rem;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+    }
+
+    .sidebar__logo {
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.3rem;
+    }
+
+    .sidebar__role {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 2.5rem;
+    }
+
+    .sidebar__nav { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+    .nav-item.active { background: rgba(155,26,26,0.15); color: var(--text-primary); }
+    .nav-item.active .nav-icon { color: var(--accent-light); }
+
+    .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    .sidebar__footer { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+
+    .admin-info {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;
+    }
+
+    .admin-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+    }
+
+    .admin-name { font-size: 0.83rem; font-weight: 600; }
+    .admin-email { font-size: 0.7rem; color: var(--text-muted); }
+
+    .btn-logout {
+      width: 100%;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-secondary);
+      font-family: var(--font-main);
+      font-size: 0.78rem;
+      padding: 9px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--accent); color: var(--accent-light); }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-2);
+      position: sticky; top: 0; z-index: 90;
+    }
+
+    .topbar__title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .topbar__tag {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ── PANELS (sections) ── */
+    .panel { display: none; padding: 2.5rem; animation: fadeIn 0.3s ease; }
+    .panel.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    /* ── STATS GRID ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5px;
+      margin-bottom: 2.5rem;
+      background: var(--border);
+    }
+
+    .stat-card {
+      background: var(--bg-2);
+      padding: 1.8rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .stat-card__label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .stat-card__value {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--text-primary);
+    }
+
+    .stat-card__sub {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .stat-card--accent .stat-card__value { color: var(--accent-warm); }
+    .stat-card--green .stat-card__value { color: var(--green-light); }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      padding: 3px 8px;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+    }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      overflow-x: auto;
+      margin-bottom: 2.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+    }
+
+    thead { background: var(--bg-3); }
+
+    th {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    td.primary { color: var(--text-primary); font-weight: 500; }
+
+    /* ── STATUS BADGE ── */
+    .status {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .status::before {
+      content: '';
+      width: 5px; height: 5px; border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status--pending  { background: rgba(196,154,26,0.15); color: #f0c040; }
+    .status--confirmed { background: rgba(26,155,80,0.15); color: #5ff0a0; }
+    .status--cancelled { background: rgba(155,26,26,0.15); color: #f07070; }
+
+    /* ── ACTION BUTTONS ── */
+    .actions { display: flex; gap: 6px; }
+
+    .btn-action {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 3px;
+      padding: 5px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+    }
+
+    .btn-action:hover { border-color: rgba(255,255,255,0.25); color: var(--text-primary); }
+    .btn-action--confirm:hover { border-color: var(--green-light); color: var(--green-light); }
+    .btn-action--cancel:hover  { border-color: var(--accent-light); color: var(--accent-light); }
+    .btn-action--delete:hover  { border-color: #f07070; color: #f07070; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      border-radius: 6px;
+      padding: 14px 20px;
+      font-size: 0.83rem;
+      z-index: 9000;
+      display: none;
+      animation: slideIn 0.3s var(--ease-out) forwards;
+    }
+    .toast.visible { display: flex; align-items: center; gap: 10px; }
+    .toast--success { border-left: 3px solid var(--green-light); }
+    .toast--error   { border-left: 3px solid var(--accent-light); }
+
+    @keyframes slideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+    /* ── LOADING PULSE ── */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface) 25%, var(--bg-3) 50%, var(--surface) 75%);
+      background-size: 200%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
+    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ═══ SIDEBAR ════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div>
+      <p class="sidebar__logo">PORSCHE</p>
+      <p class="sidebar__role">Admin Dashboard</p>
+    </div>
+
+    <nav class="sidebar__nav">
+      <button class="nav-item active" onclick="showPanel('overview')" id="nav-overview">
+        <span class="nav-icon">◈</span> Overview
+      </button>
+      <button class="nav-item" onclick="showPanel('bookings')" id="nav-bookings">
+        <span class="nav-icon">⊞</span> Test Drive Bookings
+      </button>
+      <button class="nav-item" onclick="showPanel('orders')" id="nav-orders">
+        <span class="nav-icon">▤</span> Car Orders
+      </button>
+      <button class="nav-item" onclick="showPanel('users')" id="nav-users">
+        <span class="nav-icon">◉</span> Users
+      </button>
+      <a href="/" class="nav-item">
+        <span class="nav-icon">↗</span> View Website
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="admin-info">
+        <div class="admin-avatar" id="admin-avatar">A</div>
+        <div>
+          <p class="admin-name" id="admin-name">Admin</p>
+          <p class="admin-email" id="admin-email">—</p>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN CONTENT ══════════════════════════════ -->
+  <main class="main">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div>
+        <p class="topbar__title" id="page-title">Overview</p>
+        <p class="topbar__tag" id="page-sub">Dashboard at a glance</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="badge" id="live-badge">● LIVE</span>
+        <button class="btn-action" onclick="refreshAll()">↻ Refresh</button>
+      </div>
+    </div>
+
+    <!-- ── OVERVIEW PANEL ─────────────────────── -->
+    <section class="panel active" id="panel-overview">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-card__label">Total Users</span>
+          <span class="stat-card__value" id="stat-users">—</span>
+          <span class="stat-card__sub">Registered accounts</span>
+        </div>
+        <div class="stat-card stat-card--accent">
+          <span class="stat-card__label">Test Drive Bookings</span>
+          <span class="stat-card__value" id="stat-bookings">—</span>
+          <span class="stat-card__sub">All time</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__label">Pending</span>
+          <span class="stat-card__value" id="stat-pending">—</span>
+          <span class="stat-card__sub">Awaiting confirmation</span>
+        </div>
+        <div class="stat-card stat-card--green">
+          <span class="stat-card__label">Confirmed</span>
+          <span class="stat-card__value" id="stat-confirmed">—</span>
+          <span class="stat-card__sub">Ready to drive</span>
+        </div>
+        <div class="stat-card stat-card--accent">
+          <span class="stat-card__label">Total Orders</span>
+          <span class="stat-card__value" id="stat-orders">—</span>
+          <span class="stat-card__sub">Car configurations</span>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <span class="section-title">Recent Bookings</span>
+        <button class="btn-action" onclick="showPanel('bookings')">View all →</button>
+      </div>
+      <div class="table-wrap" id="recent-bookings-table">
+        <div class="empty-state">Loading…</div>
+      </div>
+    </section>
+
+    <!-- ── BOOKINGS PANEL ─────────────────────── -->
+    <section class="panel" id="panel-bookings">
+      <div class="section-header">
+        <div>
+          <span class="section-title">All Test Drive Bookings</span>
+          &nbsp;&nbsp;<span class="badge" id="bookings-count">0</span>
+        </div>
+      </div>
+      <div class="table-wrap" id="bookings-table">
+        <div class="empty-state">Loading…</div>
+      </div>
+    </section>
+
+    <!-- ── ORDERS PANEL ───────────────────────── -->
+    <section class="panel" id="panel-orders">
+      <div class="section-header">
+        <div>
+          <span class="section-title">All Car Orders</span>
+          &nbsp;&nbsp;<span class="badge" id="orders-count">0</span>
+        </div>
+      </div>
+      <div class="table-wrap" id="orders-table">
+        <div class="empty-state">Loading…</div>
+      </div>
+    </section>
+
+    <!-- ── USERS PANEL ────────────────────────── -->
+    <section class="panel" id="panel-users">
+      <div class="section-header">
+        <div>
+          <span class="section-title">Registered Users</span>
+          &nbsp;&nbsp;<span class="badge" id="users-count">0</span>
+        </div>
+      </div>
+      <div class="table-wrap" id="users-table">
+        <div class="empty-state">Loading…</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    'use strict';
+
+    const API = '';
+    let token = localStorage.getItem('porsche_token');
+    let adminUser = JSON.parse(localStorage.getItem('porsche_user') || 'null');
+
+    /* ── Auth guard ── */
+    if (!token || !adminUser || adminUser.role !== 'admin') {
+      window.location.href = '/login';
+    }
+
+    /* ── Populate admin info ── */
+    document.getElementById('admin-name').textContent  = adminUser?.name  || 'Admin';
+    document.getElementById('admin-email').textContent = adminUser?.email || '';
+    document.getElementById('admin-avatar').textContent = (adminUser?.name || 'A')[0].toUpperCase();
+
+    /* ── Panel switcher ── */
+    const panels  = ['overview', 'bookings', 'orders', 'users'];
+    const titles  = { overview: 'Overview', bookings: 'Test Drive Bookings', orders: 'Car Orders', users: 'Users' };
+    const subs    = { overview: 'Dashboard at a glance', bookings: 'All bookings — update status or delete', orders: 'Manage customer car configurations', users: 'All registered members' };
+
+    function showPanel(name) {
+      panels.forEach(p => {
+        document.getElementById(`panel-${p}`)?.classList.toggle('active', p === name);
+        document.getElementById(`nav-${p}`)?.classList.toggle('active', p === name);
+      });
+      document.getElementById('page-title').textContent = titles[name] || name;
+      document.getElementById('page-sub').textContent   = subs[name]   || '';
+    }
+
+    /* ── API helper ── */
+    async function apiFetch(endpoint, opts = {}) {
+      const res = await fetch(API + endpoint, {
+        ...opts,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          ...opts.headers,
+        },
+      });
+      if (res.status === 401 || res.status === 403) {
+        logout();
+      }
+      return res.json();
+    }
+
+    /* ── Toast ── */
+    let toastTimer;
+    function showToast(msg, type = 'success') {
+      const el = document.getElementById('toast');
+      el.textContent = (type === 'success' ? '✓ ' : '✕ ') + msg;
+      el.className = `toast toast--${type} visible`;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { el.className = 'toast'; }, 3000);
+    }
+
+    /* ── Format date ── */
+    function fmtDate(d) {
+      return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    /* ── Status badge HTML ── */
+    function statusBadge(s) {
+      return `<span class="status status--${s}">${s}</span>`;
+    }
+
+    /* ── Load stats ── */
+    async function loadStats() {
+      const data = await apiFetch('/api/admin/stats');
+      if (!data.success) return;
+      const { totalUsers, totalBookings, totalOrders, pendingBookings, confirmedBookings } = data.stats;
+      document.getElementById('stat-users').textContent     = totalUsers;
+      document.getElementById('stat-bookings').textContent  = totalBookings;
+      document.getElementById('stat-pending').textContent   = pendingBookings;
+      document.getElementById('stat-confirmed').textContent = confirmedBookings;
+      document.getElementById('stat-orders').textContent    = totalOrders;
+    }
+
+    /* ── Load bookings ── */
+    async function loadBookings(target = 'bookings-table', limit = null) {
+      const data = await apiFetch('/api/admin/bookings');
+      const el = document.getElementById(target);
+      if (!data.success || !data.bookings.length) {
+        el.innerHTML = `<div class="empty-state">No bookings yet</div>`;
+        return data.bookings || [];
+      }
+
+      const rows = (limit ? data.bookings.slice(0, limit) : data.bookings).map(b => `
+        <tr>
+          <td class="primary">${b.users?.name || '—'}</td>
+          <td>${b.users?.email || '—'}</td>
+          <td class="primary">${b.model}</td>
+          <td>${fmtDate(b.preferred_date || b.preferredDate)}</td>
+          <td>${b.phone}</td>
+          <td>${statusBadge(b.status)}</td>
+          <td>
+            <div class="actions">
+              ${b.status !== 'confirmed' ? `<button class="btn-action btn-action--confirm" onclick="updateBooking('${b.id || b._id}','confirmed')">Confirm</button>` : ''}
+              ${b.status !== 'cancelled' ? `<button class="btn-action btn-action--cancel" onclick="updateBooking('${b.id || b._id}','cancelled')">Cancel</button>` : ''}
+              <button class="btn-action btn-action--delete" onclick="deleteBooking('${b.id || b._id}')">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      el.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Customer</th><th>Email</th><th>Model</th><th>Date</th><th>Phone</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+
+      document.getElementById('bookings-count').textContent = data.count;
+      return data.bookings;
+    }
+
+    /* ── Update booking status ── */
+    async function updateBooking(id, status) {
+      const data = await apiFetch(`/api/admin/bookings/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ status }),
+      });
+      if (data.success) {
+        showToast(`Booking marked as ${status}`);
+        refreshAll();
+      } else {
+        showToast(data.message || 'Failed to update', 'error');
+      }
+    }
+
+    /* ── Delete booking ── */
+    async function deleteBooking(id) {
+      if (!confirm('Delete this booking permanently?')) return;
+      const data = await apiFetch(`/api/admin/bookings/${id}`, { method: 'DELETE' });
+      if (data.success) {
+        showToast('Booking deleted');
+        refreshAll();
+      } else {
+        showToast(data.message || 'Failed', 'error');
+      }
+    }
+
+    /* ── Load orders ── */
+    async function loadOrders() {
+      const data = await apiFetch('/api/admin/orders');
+      const el = document.getElementById('orders-table');
+      if (!data.success || !data.orders.length) {
+        el.innerHTML = '<div class="empty-state">No orders yet</div>';
+        return;
+      }
+
+      const rows = data.orders.map(o => `
+        <tr>
+          <td class="primary">${o.users?.name || '—'}</td>
+          <td class="primary">${o.model}</td>
+          <td>${o.exterior_color} / ${o.interior_color} / ${o.wheels}</td>
+          <td class="primary">€ ${o.total_price.toLocaleString()}</td>
+          <td>${statusBadge(o.status)}</td>
+          <td>
+            <div class="actions">
+              ${o.status === 'pending' ? `<button class="btn-action btn-action--confirm" onclick="updateOrder('${o.id}','confirmed')">Confirm</button>` : ''}
+              ${o.status === 'confirmed' ? `<button class="btn-action btn-action--confirm" onclick="updateOrder('${o.id}','delivered')">Delivered</button>` : ''}
+              <button class="btn-action btn-action--delete" onclick="deleteOrder('${o.id}')">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      el.innerHTML = `
+        <table>
+          <thead>
+            <tr><th>Customer</th><th>Model</th><th>Config</th><th>Price</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+
+      document.getElementById('orders-count').textContent = data.count;
+    }
+
+    async function updateOrder(id, status) {
+      const data = await apiFetch(`/api/admin/orders/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ status }),
+      });
+      if (data.success) {
+        showToast(`Order marked as ${status}`);
+        refreshAll();
+      } else {
+        showToast(data.message || 'Failed to update', 'error');
+      }
+    }
+
+    async function deleteOrder(id) {
+      if (!confirm('Delete this order?')) return;
+      const data = await apiFetch(`/api/admin/orders/${id}`, { method: 'DELETE' });
+      if (data.success) {
+        showToast('Order deleted');
+        refreshAll();
+      } else {
+        showToast(data.message || 'Failed', 'error');
+      }
+    }
+
+    /* ── Load users ── */
+    async function loadUsers() {
+      const data = await apiFetch('/api/admin/users');
+      const el = document.getElementById('users-table');
+      if (!data.success || !data.users.length) {
+        el.innerHTML = '<div class="empty-state">No users yet</div>';
+        return;
+      }
+
+      const rows = data.users.map(u => `
+        <tr>
+          <td class="primary">${u.name}</td>
+          <td>${u.email}</td>
+          <td><span class="status ${u.role === 'admin' ? 'status--confirmed' : 'status--pending'}">${u.role}</span></td>
+          <td>${fmtDate(u.created_at || u.createdAt)}</td>
+          <td>
+            ${(u.id || u._id) !== adminUser.id ? `<button class="btn-action btn-action--delete" onclick="deleteUser('${u.id || u._id}', '${u.name}')">Delete</button>` : '<span style="color:var(--text-muted);font-size:0.7rem">You</span>'}
+          </td>
+        </tr>
+      `).join('');
+
+      el.innerHTML = `
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+
+      document.getElementById('users-count').textContent = data.count;
+    }
+
+    /* ── Delete user ── */
+    async function deleteUser(id, name) {
+      if (!confirm(`Delete user "${name}" and all their bookings?`)) return;
+      const data = await apiFetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+      if (data.success) {
+        showToast('User deleted');
+        refreshAll();
+      } else {
+        showToast(data.message || 'Failed', 'error');
+      }
+    }
+
+    /* ── Refresh all data ── */
+    async function refreshAll() {
+      await loadStats();
+      await loadBookings('bookings-table');
+      await loadBookings('recent-bookings-table', 5);
+      await loadOrders();
+      await loadUsers();
+    }
+
+    /* ── Logout ── */
+    function logout() {
+      localStorage.removeItem('porsche_token');
+      localStorage.removeItem('porsche_user');
+      window.location.href = '/login';
+    }
+
+    /* ── Init ── */
+    refreshAll();
+  </script>
+</body>
+</html>

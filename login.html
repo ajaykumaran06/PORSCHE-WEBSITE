@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porsche — Login & Register</title>
+  <meta name="description" content="Sign in to your Porsche account or create a new one." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --bg-2: #111111;
+      --surface: #1a1a1a;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.18);
+      --text-primary: #f2f0ed;
+      --text-secondary: rgba(242,240,237,0.55);
+      --text-muted: rgba(242,240,237,0.3);
+      --accent: #9b1a1a;
+      --accent-light: #c43b3b;
+      --accent-warm: #e8d5b0;
+      --font-main: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN ── */
+    .grain {
+      position: fixed; inset: 0; z-index: 999; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 120px; opacity: 0.35; mix-blend-mode: overlay;
+    }
+
+    /* ── LEFT PANEL ── */
+    .left-panel {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem;
+      background: var(--bg-2);
+      border-right: 1px solid var(--border);
+    }
+
+    .left-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(155,26,26,0.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .left-panel__logo {
+      font-size: 1.2rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--text-primary);
+      text-decoration: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .left-panel__hero {
+      position: relative;
+      z-index: 1;
+    }
+
+    .left-panel__tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      display: block;
+      margin-bottom: 1.5rem;
+    }
+
+    .left-panel__title {
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      margin-bottom: 1.5rem;
+    }
+
+    .left-panel__title em {
+      font-style: normal;
+      color: var(--accent-warm);
+    }
+
+    .left-panel__desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 38ch;
+    }
+
+    .left-panel__stats {
+      display: flex;
+      gap: 3rem;
+      position: relative;
+      z-index: 1;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-item { display: flex; flex-direction: column; gap: 4px; }
+    .stat-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ── RIGHT PANEL (FORM) ── */
+    .right-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 4vw;
+      overflow-y: auto;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .auth-box__heading {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.4rem;
+    }
+
+    .auth-box__sub {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── TABS ── */
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .auth-tab {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-main);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.8rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      margin-bottom: -1px;
+    }
+
+    .auth-tab.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ── FORM ── */
+    .auth-form { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .form-label {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 13px 16px;
+      font-family: var(--font-main);
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(155,26,26,0.15);
+    }
+
+    .form-input::placeholder { color: var(--text-muted); }
+
+    .admin-code-group { display: none; }
+    .admin-code-group.visible { display: flex; }
+
+    .toggle-admin {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-align: left;
+      transition: color 0.2s;
+      margin-top: -0.4rem;
+    }
+    .toggle-admin:hover { color: var(--accent-light); }
+
+    .btn-submit {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 14px 28px;
+      font-family: var(--font-main);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      box-shadow: 0 2px 20px rgba(155,26,26,0.35);
+      margin-top: 0.3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit:hover {
+      background: var(--accent-light);
+      box-shadow: 0 4px 30px rgba(155,26,26,0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-submit .spinner {
+      display: none;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+
+    .btn-submit.loading .btn-text { display: none; }
+    .btn-submit.loading .spinner { display: block; }
+
+    /* ── ALERT ── */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-size: 0.83rem;
+      display: none;
+      animation: fadeUp 0.3s var(--ease-out) forwards;
+    }
+
+    .alert.visible { display: block; }
+
+    .alert--error {
+      background: rgba(155,26,26,0.12);
+      border: 1px solid rgba(155,26,26,0.35);
+      color: #f4a0a0;
+    }
+
+    .alert--success {
+      background: rgba(26,155,80,0.12);
+      border: 1px solid rgba(26,155,80,0.35);
+      color: #7ef0ad;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin: 0.5rem 0;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: var(--border);
+    }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-top: 1.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text-secondary); }
+    .back-link::before { content: '←'; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      body { grid-template-columns: 1fr; }
+      .left-panel { display: none; }
+      .right-panel { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ═══ LEFT PANEL ═══════════════════════════════ -->
+  <div class="left-panel">
+    <a href="/" class="left-panel__logo">PORSCHE</a>
+
+    <div class="left-panel__hero">
+      <span class="left-panel__tag">Members Area</span>
+      <h1 class="left-panel__title">
+        Your Drive.<br /><em>Your Account.</em>
+      </h1>
+      <p class="left-panel__desc">
+        Access exclusive configurations, book test drives at your nearest Porsche Centre, and manage your dream garage.
+      </p>
+    </div>
+
+    <div class="left-panel__stats">
+      <div class="stat-item">
+        <span class="stat-val">10K+</span>
+        <span class="stat-label">Configurations</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">6</span>
+        <span class="stat-label">Model Lines</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">1963</span>
+        <span class="stat-label">Est. Stuttgart</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RIGHT PANEL ════════════════════════════════ -->
+  <div class="right-panel">
+    <div class="auth-box">
+      <h2 class="auth-box__heading" id="form-heading">Welcome back</h2>
+      <p class="auth-box__sub" id="form-sub">Sign in to your Porsche account</p>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Create Account</button>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert" id="auth-alert" role="alert"></div>
+
+      <!-- Form -->
+      <form class="auth-form" id="auth-form" novalidate>
+
+        <!-- Register-only: Name -->
+        <div class="form-group" id="field-name" style="display:none">
+          <label class="form-label" for="inp-name">Full Name</label>
+          <input class="form-input" type="text" id="inp-name" placeholder="Ferdinand Porsche" autocomplete="name" />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="inp-email">Email Address</label>
+          <input class="form-input" type="email" id="inp-email" placeholder="you@porsche.com" autocomplete="email" required />
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" for="inp-password">Password</label>
+          <input class="form-input" type="password" id="inp-password" placeholder="••••••••" autocomplete="current-password" required />
+        </div>
+
+        <!-- Admin Code (register only, hidden by default) -->
+        <div class="form-group admin-code-group" id="field-admin-code">
+          <label class="form-label" for="inp-admin-code">Admin Access Code</label>
+          <input class="form-input" type="password" id="inp-admin-code" placeholder="Enter admin code" />
+        </div>
+
+        <!-- Toggle admin code link (register tab only) -->
+        <button type="button" class="toggle-admin" id="toggle-admin-code" style="display:none" onclick="toggleAdminCode()">
+          + Register as Administrator
+        </button>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit" id="btn-submit">
+          <span class="btn-text">Sign In</span>
+          <span class="spinner"></span>
+        </button>
+
+        <div class="divider">or</div>
+        <a href="/" class="back-link">Return to main website</a>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+
+    const API = '';   // empty = same origin
+
+    let currentTab = 'login';
+    let adminCodeVisible = false;
+
+    /* ── Tab switch ── */
+    function switchTab(tab) {
+      currentTab = tab;
+      adminCodeVisible = false;
+
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+      document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+
+      document.getElementById('field-name').style.display = tab === 'register' ? 'flex' : 'none';
+      document.getElementById('toggle-admin-code').style.display = tab === 'register' ? 'block' : 'none';
+
+      document.getElementById('field-admin-code').classList.remove('visible');
+      document.getElementById('inp-admin-code').value = '';
+      document.getElementById('inp-password').setAttribute('autocomplete', tab === 'login' ? 'current-password' : 'new-password');
+
+      document.getElementById('form-heading').textContent = tab === 'login' ? 'Welcome back' : 'Create account';
+      document.getElementById('form-sub').textContent     = tab === 'login' ? 'Sign in to your Porsche account' : 'Join the Porsche family';
+      document.getElementById('btn-submit').querySelector('.btn-text').textContent = tab === 'login' ? 'Sign In' : 'Create Account';
+
+      hideAlert();
+    }
+
+    /* ── Toggle admin code field ── */
+    function toggleAdminCode() {
+      adminCodeVisible = !adminCodeVisible;
+      document.getElementById('field-admin-code').classList.toggle('visible', adminCodeVisible);
+      document.getElementById('toggle-admin-code').textContent = adminCodeVisible
+        ? '− Cancel admin registration'
+        : '+ Register as Administrator';
+    }
+
+    /* ── Alert helpers ── */
+    function showAlert(msg, type = 'error') {
+      const el = document.getElementById('auth-alert');
+      el.textContent = msg;
+      el.className = `alert alert--${type} visible`;
+    }
+
+    function hideAlert() {
+      const el = document.getElementById('auth-alert');
+      el.className = 'alert';
+    }
+
+    /* ── Loading state ── */
+    function setLoading(on) {
+      const btn = document.getElementById('btn-submit');
+      btn.classList.toggle('loading', on);
+      btn.disabled = on;
+    }
+
+    /* ── Form submit ── */
+    document.getElementById('auth-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+
+      const email    = document.getElementById('inp-email').value.trim();
+      const password = document.getElementById('inp-password').value;
+
+      if (!email || !password) {
+        showAlert('Please fill in all required fields.');
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        let endpoint, body;
+
+        if (currentTab === 'login') {
+          endpoint = '/api/auth/login';
+          body = { email, password };
+        } else {
+          const name = document.getElementById('inp-name').value.trim();
+          const adminCode = document.getElementById('inp-admin-code').value;
+          if (!name) { showAlert('Please enter your name.'); setLoading(false); return; }
+          endpoint = '/api/auth/register';
+          body = { name, email, password, ...(adminCode && { adminCode }) };
+        }
+
+        const res = await fetch(API + endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          const msg = data.errors ? data.errors[0].msg : data.message;
+          showAlert(msg || 'Something went wrong.');
+          setLoading(false);
+          return;
+        }
+
+        // Save JWT & user info
+        localStorage.setItem('porsche_token', data.token);
+        localStorage.setItem('porsche_user', JSON.stringify(data.user));
+
+        showAlert(
+          currentTab === 'login'
+            ? `Welcome back, ${data.user.name}! Redirecting…`
+            : `Account created! Welcome, ${data.user.name}! Redirecting…`,
+          'success'
+        );
+
+        setTimeout(() => {
+          if (data.user.role === 'admin') {
+            window.location.href = '/admin';
+          } else {
+            window.location.href = '/';
+          }
+        }, 1200);
+
+      } catch (err) {
+        showAlert('Network error — is the server running?');
+        setLoading(false);
+      }
+    });
+
+    /* ── Redirect if already logged in ── */
+    (function checkAuth() {
+      const token = localStorage.getItem('porsche_token');
+      const user  = JSON.parse(localStorage.getItem('porsche_user') || 'null');
+      if (token && user) {
+        window.location.href = user.role === 'admin' ? '/admin' : '/';
+      }
+    })();
+  </script>
+</body>
+</html>

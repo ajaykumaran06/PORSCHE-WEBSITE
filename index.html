@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porsche — Driven by Dreams</title>
+  <meta name="description"
+    content="Discover the Porsche lineup — from the iconic 911 to the all-electric Taycan. Precision engineering. Timeless design. Pure performance." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Grain Overlay (fixed, non-interactive) -->
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- ═══════════════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════════════ -->
+  <nav class="nav" id="main-nav">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo" id="nav-logo">
+        <svg width="76" height="24" viewBox="0 0 76 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="20" font-family="Outfit, sans-serif" font-weight="800" font-size="20" fill="currentColor"
+            letter-spacing="-0.5">PORSCHE</text>
+        </svg>
+      </a>
+
+      <ul class="nav__links" id="nav-links">
+        <li><a href="#models" class="nav__link" id="nav-models">Models</a></li>
+        <li><a href="#" onclick="openConfigurator(); return false;" class="nav__link">Book a Car</a></li>
+        <li><a href="#performance" class="nav__link" id="nav-performance">Performance</a></li>
+        <li><a href="#heritage" class="nav__link" id="nav-heritage">Heritage</a></li>
+      </ul>
+
+      <div class="nav__actions">
+        <button class="btn btn--ghost" id="nav-configure">Book a Car</button>
+        <a href="/login" class="btn btn--ghost" id="nav-login" style="display:none">Sign In</a>
+        <button class="btn btn--ghost" id="nav-account" style="display:none" onclick="openAccountMenu()">Account
+          ▾</button>
+        <button class="nav__menu-btn" id="menu-toggle" aria-label="Toggle menu">
+          <span></span><span></span>
+        </button>
+      </div>
+
+      <!-- Account dropdown -->
+      <div class="account-dropdown" id="account-dropdown" style="display:none">
+        <p class="acct-name" id="acct-name-display"></p>
+        <hr class="acct-divider" />
+        <a href="#" onclick="viewMyBookings()" class="acct-item">My Test Drives</a>
+        <a href="#" onclick="viewMyOrders()" class="acct-item">My Orders</a>
+        <a href="/admin" id="acct-admin-link" class="acct-item" style="display:none">Admin Dashboard</a>
+        <hr class="acct-divider" />
+        <button onclick="logoutUser()" class="acct-item acct-item--danger">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <ul>
+      <li><a href="#models" id="mob-models">Models</a></li>
+      <li><a href="#performance" id="mob-performance">Performance</a></li>
+      <li><a href="#heritage" id="mob-heritage">Heritage</a></li>
+      <li><a href="#experience" id="mob-experience">Experience</a></li>
+      <li><a href="#" id="mob-configure">Configure Your Porsche</a></li>
+      <li><a href="/login" id="mob-login" style="display:none">Sign In</a></li>
+      <li><a href="#" id="mob-account" style="display:none" onclick="openBookingModal()">Book Test Drive</a></li>
+    </ul>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero__bg">
+      <img src="hero.png" alt="Porsche 911 GT3 RS on mountain pass at dusk" class="hero__img" id="hero-img" />
+      <div class="hero__overlay"></div>
+    </div>
+
+    <div class="hero__content">
+      <div class="hero__eyebrow" id="hero-eyebrow">
+        <span class="mono">2025 Lineup</span>
+        <span class="dot"></span>
+        <span class="mono">Now Available</span>
+      </div>
+
+      <h1 class="hero__title" id="hero-title">
+        <span class="hero__title-line">There is no</span>
+        <span class="hero__title-line hero__title-line--accent">substitute.</span>
+      </h1>
+
+      <p class="hero__sub" id="hero-sub">
+        Every Porsche begins with a single obsession—<br />the pursuit of the perfect drive.
+      </p>
+
+      <div class="hero__cta" id="hero-cta">
+        <a href="#models" class="btn btn--primary" id="hero-explore">Explore Models</a>
+        <a href="#" class="btn btn--outline" id="hero-configure">Configure Yours</a>
+      </div>
+    </div>
+
+    <div class="hero__spec-bar" id="hero-spec-bar">
+      <div class="hero__spec">
+        <span class="hero__spec-value">3.7s</span>
+        <span class="hero__spec-label">0 – 100 km/h</span>
+      </div>
+      <div class="hero__spec-divider" aria-hidden="true"></div>
+      <div class="hero__spec">
+        <span class="hero__spec-value">510</span>
+        <span class="hero__spec-label">Horsepower</span>
+      </div>
+      <div class="hero__spec-divider" aria-hidden="true"></div>
+      <div class="hero__spec">
+        <span class="hero__spec-value">318</span>
+        <span class="hero__spec-label">km/h Top Speed</span>
+      </div>
+      <div class="hero__spec-divider" aria-hidden="true"></div>
+      <div class="hero__spec">
+        <span class="hero__spec-value mono">°1963</span>
+        <span class="hero__spec-label">Est. Stuttgart</span>
+      </div>
+    </div>
+
+    <div class="hero__scroll-hint" id="hero-scroll">
+      <div class="scroll-line"></div>
+      <span class="mono">Scroll</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       MARQUEE STRIP
+  ═══════════════════════════════════════ -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track" id="marquee-track">
+      <span>911 CARRERA</span><span class="sep">·</span>
+      <span>TAYCAN TURBO S</span><span class="sep">·</span>
+      <span>CAYMAN GT4 RS</span><span class="sep">·</span>
+      <span>MACAN ELECTRIC</span><span class="sep">·</span>
+      <span>PANAMERA TURBO</span><span class="sep">·</span>
+      <span>CAYENNE COUPE</span><span class="sep">·</span>
+      <span>911 GT3 RS</span><span class="sep">·</span>
+      <span>BOXSTER GTS</span><span class="sep">·</span>
+      <span>911 CARRERA</span><span class="sep">·</span>
+      <span>TAYCAN TURBO S</span><span class="sep">·</span>
+      <span>CAYMAN GT4 RS</span><span class="sep">·</span>
+      <span>MACAN ELECTRIC</span><span class="sep">·</span>
+      <span>PANAMERA TURBO</span><span class="sep">·</span>
+      <span>CAYENNE COUPE</span><span class="sep">·</span>
+      <span>911 GT3 RS</span><span class="sep">·</span>
+      <span>BOXSTER GTS</span><span class="sep">·</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       MODELS SECTION
+  ═══════════════════════════════════════ -->
+  <section class="models" id="models">
+    <div class="section-header section-header--split">
+      <div class="section-header__left">
+        <span class="section-tag mono" id="models-tag">01 / Models</span>
+        <h2 class="section-title" id="models-title">The<br /><em>Collection</em></h2>
+      </div>
+      <div class="section-header__right">
+        <p class="section-desc" id="models-desc">
+          Each model carries decades of motorsport knowledge into everyday roads. Choose your obsession.
+        </p>
+      </div>
+    </div>
+
+    <div class="models-grid" id="models-grid">
+
+      <!-- Card 1 — 911 -->
+      <article class="model-card model-card--large" id="model-911">
+        <div class="model-card__img-wrap">
+          <img src="hero.png" alt="Porsche 911 GT3 RS" class="model-card__img" loading="lazy" />
+          <div class="model-card__overlay"></div>
+        </div>
+        <div class="model-card__body">
+          <div class="model-card__meta">
+            <span class="mono model-card__tag">Iconic</span>
+            <span class="model-card__badge">From €117,700</span>
+          </div>
+          <h3 class="model-card__name">911</h3>
+          <p class="model-card__desc">The original. Rear-engine, rear-wheel drive. Six decades of continuous evolution
+            without compromising its soul.</p>
+          <div class="model-card__specs">
+            <span><strong>450</strong> hp</span>
+            <span><strong>4.0s</strong> 0–100</span>
+            <span><strong>306</strong> km/h</span>
+          </div>
+          <button onclick="showInfo('911')" class="btn btn--primary btn--sm" id="btn-911">Discover the 911</button>
+        </div>
+      </article>
+
+      <!-- Card 2 — Taycan -->
+      <article class="model-card" id="model-taycan">
+        <div class="model-card__img-wrap">
+          <img src="taycan.png" alt="Porsche Taycan Turbo S" class="model-card__img" loading="lazy" />
+          <div class="model-card__overlay"></div>
+        </div>
+        <div class="model-card__body">
+          <div class="model-card__meta">
+            <span class="mono model-card__tag">Electric</span>
+            <span class="model-card__badge">From €88,500</span>
+          </div>
+          <h3 class="model-card__name">Taycan</h3>
+          <p class="model-card__desc">The electric sports car. Zero emissions. Zero compromise. Everything you expect
+            from Porsche, amplified.</p>
+          <div class="model-card__specs">
+            <span><strong>761</strong> hp</span>
+            <span><strong>2.8s</strong> 0–100</span>
+            <span><strong>260</strong> km/h</span>
+          </div>
+          <button onclick="showInfo('taycan')" class="btn btn--outline btn--sm" id="btn-taycan">Explore Taycan</button>
+        </div>
+      </article>
+
+      <!-- Card 3 — Cayman -->
+      <article class="model-card" id="model-cayman">
+        <div class="model-card__img-wrap">
+          <img src="cayman.png" alt="Porsche Cayman GT4 RS" class="model-card__img" loading="lazy" />
+          <div class="model-card__overlay"></div>
+        </div>
+        <div class="model-card__body">
+          <div class="model-card__meta">
+            <span class="mono model-card__tag">Track</span>
+            <span class="model-card__badge">From €92,400</span>
+          </div>
+          <h3 class="model-card__name">718 Cayman</h3>
+          <p class="model-card__desc">Mid-engine perfection. The purist's choice. Built around the driver, not around
+            compromises.</p>
+          <div class="model-card__specs">
+            <span><strong>500</strong> hp</span>
+            <span><strong>3.4s</strong> 0–100</span>
+            <span><strong>315</strong> km/h</span>
+          </div>
+          <button onclick="showInfo('cayman')" class="btn btn--outline btn--sm" id="btn-cayman">Explore 718</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       PERFORMANCE SPLIT SECTION
+  ═══════════════════════════════════════ -->
+  <section class="performance" id="performance">
+    <div class="performance__inner">
+      <div class="performance__visual">
+        <img src="interior.png" alt="Porsche cockpit interior" class="performance__img" loading="lazy" id="perf-img" />
+        <div class="performance__stat-float" id="perf-stat-float">
+          <span class="mono performance__stat-value">9,000</span>
+          <span class="performance__stat-unit">RPM Redline</span>
+        </div>
+      </div>
+
+      <div class="performance__content">
+        <span class="section-tag mono" id="perf-tag">02 / Performance</span>
+        <h2 class="section-title" id="perf-title">
+          Engineering<br /><em>without</em><br />limits.
+        </h2>
+        <p class="body-text" id="perf-body-1">
+          The flat-six engine is a Porsche religion. Naturally aspirated, high-revving, and mounted precisely over the
+          rear axle — it has defined what a sports car sounds like for six decades.
+        </p>
+        <p class="body-text" id="perf-body-2">
+          Every component is tested at the Nürburgring before it earns its place. The track gives permission. The road
+          is where it lives.
+        </p>
+
+        <div class="performance__metrics" id="perf-metrics">
+          <div class="metric">
+            <span class="metric__val mono">82.1%</span>
+            <span class="metric__label">Thermal Efficiency</span>
+          </div>
+          <div class="metric">
+            <span class="metric__val mono">47.3 kg</span>
+            <span class="metric__label">Carbon Fibre Saved</span>
+          </div>
+          <div class="metric">
+            <span class="metric__val mono">6.2ms</span>
+            <span class="metric__label">PDK Shift Speed</span>
+          </div>
+        </div>
+
+        <button onclick="showInfo('engineering')" class="btn btn--primary" id="perf-cta">Engineering Deep Dive</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       HERITAGE SECTION
+  ═══════════════════════════════════════ -->
+  <section class="heritage" id="heritage">
+    <div class="heritage__img-wrap">
+      <img src="heritage.png" alt="Porsche heritage — classic and modern 911" class="heritage__img" loading="lazy"
+        id="heritage-img" />
+      <div class="heritage__gradient"></div>
+    </div>
+
+    <div class="heritage__content" id="heritage-content">
+      <span class="section-tag mono" id="heritage-tag">03 / Heritage</span>
+      <h2 class="heritage__title" id="heritage-title">
+        Born 1963.<br /><em>Still relevant.</em>
+      </h2>
+      <p class="body-text heritage__body" id="heritage-body">
+        The 911 silhouette has remained unchanged in spirit for over 60 years. Not because Porsche resists change — but
+        because the original was already correct.
+      </p>
+      <div class="heritage__timeline" id="heritage-timeline">
+        <div class="timeline-item" style="--i:0">
+          <span class="mono timeline-year">1963</span>
+          <span class="timeline-event">911 debuts at Frankfurt Motor Show</span>
+        </div>
+        <div class="timeline-item" style="--i:1">
+          <span class="mono timeline-year">1973</span>
+          <span class="timeline-event">Carrera RS — the blueprint for all RS models</span>
+        </div>
+        <div class="timeline-item" style="--i:2">
+          <span class="mono timeline-year">1989</span>
+          <span class="timeline-event">964 reshapes the car for the modern era</span>
+        </div>
+        <div class="timeline-item" style="--i:3">
+          <span class="mono timeline-year">2019</span>
+          <span class="timeline-event">Taycan — Porsche enters the electric age</span>
+        </div>
+        <div class="timeline-item" style="--i:4">
+          <span class="mono timeline-year">2025</span>
+          <span class="timeline-event">Next chapter — unchanged obsession</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       CONFIGURATOR CTA
+  ═══════════════════════════════════════ -->
+  <section class="configurator-cta" id="experience">
+    <div class="configurator-cta__inner">
+      <div class="configurator-cta__content">
+        <span class="section-tag mono" id="exp-tag">04 / Experience</span>
+        <h2 class="configurator-cta__title" id="exp-title">
+          Build your<br /><em>Porsche.</em>
+        </h2>
+        <p class="body-text" id="exp-body">
+          Over 10,000 possible configurations. One that is, by definition, yours. The configurator puts the factory in
+          your hands.
+        </p>
+        <a href="#" class="btn btn--primary btn--lg" id="btn-configurator">Open Configurator</a>
+      </div>
+
+      <div class="configurator-cta__visual" id="exp-visual">
+        <div class="configurator-card glass-card" id="config-card">
+          <div class="config-row">
+            <span class="config-label mono">Model</span>
+            <span class="config-val">911 Carrera 4S</span>
+          </div>
+          <div class="config-row">
+            <span class="config-label mono">Colour</span>
+            <div class="config-colors">
+              <button class="color-swatch" style="--c:#820000" id="swatch-red" aria-label="Guards Red"></button>
+              <button class="color-swatch active" style="--c:#1a1a2e" id="swatch-night"
+                aria-label="Night Blue"></button>
+              <button class="color-swatch" style="--c:#b8b8b8" id="swatch-silver" aria-label="Chalk Silver"></button>
+              <button class="color-swatch" style="--c:#2d4a2d" id="swatch-green" aria-label="Python Green"></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <span class="config-label mono">Interior</span>
+            <span class="config-val">Black Leather / Carbon</span>
+          </div>
+          <div class="config-row">
+            <span class="config-label mono">Wheels</span>
+            <span class="config-val">21" RS Spyder Design</span>
+          </div>
+          <div class="config-divider"></div>
+          <div class="config-row config-row--total">
+            <span class="config-label mono">Base Price</span>
+            <span class="config-val config-val--price mono">€ 134,580</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TEST DRIVE BOOKING SECTION
+  ═══════════════════════════════════════ -->
+  <section class="booking-section" id="booking-section">
+    <div class="booking-section__inner">
+      <div class="booking-section__content">
+        <span class="section-tag mono" id="booking-tag">05 / Test Drive</span>
+        <h2 class="section-title" id="booking-title">Drive it.<br /><em>Before you buy it.</em></h2>
+        <p class="body-text" id="booking-desc">
+          Book a test drive at your nearest Porsche Centre. Feel the engineering. Experience the difference.
+        </p>
+        <button class="btn btn--primary btn--lg" id="btn-book-test-drive" onclick="openBookingModal()">Book a Test
+          Drive</button>
+      </div>
+      <div class="booking-section__visual">
+        <div class="booking-feature-list">
+          <div class="booking-feature"><span class="booking-feature__icon">⊕</span><span>Personalised 1-on-1 session
+              with a Porsche expert</span></div>
+          <div class="booking-feature"><span class="booking-feature__icon">⊕</span><span>Test any model from the current
+              lineup</span></div>
+          <div class="booking-feature"><span class="booking-feature__icon">⊕</span><span>No purchase obligation — pure
+              experience</span></div>
+          <div class="booking-feature"><span class="booking-feature__icon">⊕</span><span>Available at all certified
+              Porsche Centres</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+  <footer class="footer" id="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <p class="footer__wordmark">PORSCHE</p>
+        <p class="footer__tagline mono">Driven by Dreams.</p>
+      </div>
+
+      <nav class="footer__nav" aria-label="Footer navigation">
+        <div class="footer__col">
+          <h4 class="footer__col-title">Models</h4>
+          <ul>
+            <li><button onclick="showInfo('911', event)" class="footer-btn">911</button></li>
+            <li><button onclick="showInfo('taycan', event)" class="footer-btn">Taycan</button></li>
+            <li><button onclick="showInfo('cayman', event)" class="footer-btn">718 Cayman</button></li>
+            <li><button onclick="showInfo('macan', event)" class="footer-btn">Macan</button></li>
+            <li><button onclick="showInfo('panamera', event)" class="footer-btn">Panamera</button></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4 class="footer__col-title">Company</h4>
+          <ul>
+            <li><button onclick="showInfo('about', event)" class="footer-btn">About</button></li>
+            <li><button onclick="showInfo('history', event)" class="footer-btn">History</button></li>
+            <li><button onclick="showInfo('motorsport', event)" class="footer-btn">Motorsport</button></li>
+            <li><button onclick="showInfo('sustainability', event)" class="footer-btn">Sustainability</button></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="mono footer__legal">© 2025 Porsche AG. All rights reserved.</p>
+      <div class="footer__bottom-links">
+        <a href="#" id="f-privacy">Privacy</a>
+        <a href="#" id="f-legal">Legal</a>
+        <a href="#" id="f-cookies">Cookies</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════
+       BOOKING MODAL
+  ═══════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════
+       CONFIGURATOR MODAL
+  ═══════════════════════════════════════ -->
+  <div class="modal-backdrop" id="config-backdrop" onclick="closeConfigurator()"></div>
+  <div class="config-modal" id="config-modal" role="dialog" aria-modal="true" aria-label="Porsche Configurator">
+    <button class="modal-close" onclick="closeConfigurator()" aria-label="Close">✕</button>
+
+    <div class="config-modal__inner">
+      <!-- Left: Visual Preview -->
+      <div class="config-visual">
+        <div class="config-visual__stage">
+          <img src="hero.png" id="config-preview-img" alt="Porsche Preview" />
+          <div class="config-visual__overlay"></div>
+        </div>
+        <div class="config-visual__info">
+          <h2 id="config-display-model">911 Carrera</h2>
+          <p id="config-display-specs" class="mono">3.7s 0-100 km/h · 450 hp</p>
+        </div>
+      </div>
+
+      <!-- Right: Customization Panels -->
+      <div class="config-controls">
+        <div class="config-controls__header">
+          <span class="section-tag mono">Configuration</span>
+          <h3 class="modal-title">Customise Your Porsche</h3>
+        </div>
+
+        <div class="config-tabs">
+          <button class="config-tab active" onclick="showConfigTab('model', event)">Model</button>
+          <button class="config-tab" onclick="showConfigTab('exterior', event)">Exterior</button>
+          <button class="config-tab" onclick="showConfigTab('interior', event)">Interior</button>
+          <button class="config-tab" onclick="showConfigTab('wheels', event)">Wheels</button>
+        </div>
+
+        <div class="config-panel active" id="panel-model">
+          <div class="config-option-list">
+            <button class="config-option active" onclick="selectModel('911 Carrera', event)">
+              <span class="option-name">911 Carrera</span>
+              <span class="option-price">€ 124,580</span>
+            </button>
+            <button class="config-option" onclick="selectModel('Taycan', event)">
+              <span class="option-name">Taycan</span>
+              <span class="option-price">€ 92,100</span>
+            </button>
+            <button class="config-option" onclick="selectModel('718 Cayman', event)">
+              <span class="option-name">718 Cayman</span>
+              <span class="option-price">€ 68,400</span>
+            </button>
+            <button class="config-option" onclick="selectModel('Panamera', event)">
+              <span class="option-name">Panamera</span>
+              <span class="option-price">€ 112,000</span>
+            </button>
+            <button class="config-option" onclick="selectModel('Macan', event)">
+              <span class="option-name">Macan</span>
+              <span class="option-price">€ 75,000</span>
+            </button>
+            <button class="config-option" onclick="selectModel('Cayenne', event)">
+              <span class="option-name">Cayenne</span>
+              <span class="option-price">€ 89,000</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="config-panel" id="panel-exterior">
+          <p class="config-panel__label mono">Paint Colour</p>
+          <div class="config-color-grid">
+            <button class="color-circle active" style="--c:#ffffff" onclick="selectColor('Carrara White', 0, event)"
+              title="Carrara White"></button>
+            <button class="color-circle" style="--c:#000000" onclick="selectColor('Jet Black', 1200, event)"
+              title="Jet Black"></button>
+            <button class="color-circle" style="--c:#9b1a1a" onclick="selectColor('Guards Red', 0, event)"
+              title="Guards Red"></button>
+            <button class="color-circle" style="--c:#1a3a6b" onclick="selectColor('Gentian Blue', 1500, event)"
+              title="Gentian Blue"></button>
+            <button class="color-circle" style="--c:#2d4a2d" onclick="selectColor('Python Green', 2800, event)"
+              title="Python Green"></button>
+            <button class="color-circle" style="--c:#d2d2d2" onclick="selectColor('Chalk', 3200, event)"
+              title="Chalk"></button>
+            <button class="color-circle" style="--c:#f9d71c" onclick="selectColor('Racing Yellow', 0, event)"
+              title="Racing Yellow"></button>
+            <button class="color-circle" style="--c:#1e81b0" onclick="selectColor('Shark Blue', 3500, event)"
+              title="Shark Blue"></button>
+          </div>
+          <p id="selected-color-name" class="config-selection-name">Carrara White</p>
+        </div>
+
+        <div class="config-panel" id="panel-interior">
+          <p class="config-panel__label mono">Interior Trim</p>
+          <div class="config-option-list">
+            <button class="config-option active" onclick="selectInterior('Standard Black', 0, event)">
+              <span class="option-name">Standard Interior in Black</span>
+              <span class="option-price">Included</span>
+            </button>
+            <button class="config-option" onclick="selectInterior('Leather Black/Bordeaux Red', 4500, event)">
+              <span class="option-name">Two-tone Leather Interior</span>
+              <span class="option-price">+ € 4,500</span>
+            </button>
+            <button class="config-option" onclick="selectInterior('Race-Tex with Carbon', 6200, event)">
+              <span class="option-name">Race-Tex Interior with Carbon</span>
+              <span class="option-price">+ € 6,200</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="config-panel" id="panel-wheels">
+          <p class="config-panel__label mono">Wheels</p>
+          <div class="config-option-list">
+            <button class="config-option active" onclick="selectWheels('19-inch Carrera', 0, event)">
+              <span class="option-name">19-inch Carrera Wheels</span>
+              <span class="option-price">Included</span>
+            </button>
+            <button class="config-option" onclick="selectWheels('20/21-inch Carrera S', 2800, event)">
+              <span class="option-name">20/21-inch Carrera S Wheels</span>
+              <span class="option-price">+ € 2,800</span>
+            </button>
+            <button class="config-option" onclick="selectWheels('20/21-inch RS Spyder', 4200, event)">
+              <span class="option-name">20/21-inch RS Spyder Design</span>
+              <span class="option-price">+ € 4,200</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="config-footer">
+          <div class="config-total">
+            <span class="mono">Total Price</span>
+            <h4 id="config-total-price">€ 124,580</h4>
+          </div>
+          <button class="btn--config-book" id="btn-place-order" onclick="placeOrder()">Book Your Porsche</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop" onclick="closeBookingModal()"></div>
+  <div class="booking-modal" id="booking-modal" role="dialog" aria-modal="true" aria-label="Book a Test Drive">
+    <button class="modal-close" onclick="closeBookingModal()" aria-label="Close">✕</button>
+    <div class="modal-header">
+      <span class="section-tag mono">Test Drive</span>
+      <h3 class="modal-title">Book Your Experience</h3>
+      <p class="modal-sub">Complete the form — we'll confirm within 24 hours.</p>
+    </div>
+    <div class="modal-alert" id="modal-alert"></div>
+    <form class="modal-form" id="booking-form" novalidate>
+      <div class="modal-grid">
+        <div class="modal-field">
+          <label class="form-label-sm" for="bk-model">Select Model</label>
+          <select class="form-select" id="bk-model" required>
+            <option value="">Choose your Porsche…</option>
+            <option value="911 Carrera">911 Carrera</option>
+            <option value="Taycan">Taycan</option>
+            <option value="718 Cayman">718 Cayman</option>
+            <option value="Macan">Macan</option>
+            <option value="Panamera">Panamera</option>
+            <option value="Cayenne">Cayenne</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label class="form-label-sm" for="bk-date">Preferred Date</label>
+          <input class="form-select" type="date" id="bk-date" required />
+        </div>
+        <div class="modal-field">
+          <label class="form-label-sm" for="bk-phone">Phone Number</label>
+          <input class="form-select" type="tel" id="bk-phone" placeholder="+91 98765 43210" required />
+        </div>
+        <div class="modal-field modal-field--full">
+          <label class="form-label-sm" for="bk-message">Message (optional)</label>
+          <textarea class="form-select form-textarea" id="bk-message" rows="3"
+            placeholder="Any specific requirements or questions?"></textarea>
+        </div>
+      </div>
+      <button type="submit" class="btn btn--primary btn-submit-booking" id="btn-submit-booking">
+        <span class="btn-booking-text">Confirm Booking</span>
+        <span class="btn-booking-spinner" style="display:none">●●●</span>
+      </button>
+    </form>
+    <div class="modal-login-prompt" id="modal-login-prompt" style="display:none">
+      <p>You need to sign in to book a test drive.</p>
+      <a href="/login" class="btn btn--primary" style="margin-top:1rem">Sign In / Create Account</a>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       INFORMATION MODAL (Simple Popup)
+  ═══════════════════════════════════════ -->
+  <div class="modal-backdrop" id="info-backdrop" onclick="closeInfo()"></div>
+  <div class="info-modal" id="info-modal">
+    <button class="modal-close" onclick="closeInfo()">✕</button>
+    <div class="info-modal__content">
+      <span class="section-tag mono" id="info-tag">Porsche Insight</span>
+      <h3 class="modal-title" id="info-title">The Engineering Soul</h3>
+      <div class="info-body" id="info-body">
+        <!-- Content injected by JS -->
+      </div>
+      <button class="btn btn--outline btn--sm" onclick="closeInfo()" style="margin-top: 2rem;">Close</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="auth-api.js"></script>
+</body>
+
+</html>
