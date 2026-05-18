@@ -1866,6 +1866,77 @@ ul {
   }
 }
 
+/* ── Absolute Fix for Configurator Button ── */
+.config-modal__inner {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  height: 90vh;
+  /* Match parent */
+  max-height: 90vh;
+}
+
+.config-controls {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 2.5rem;
+  background: var(--bg-3);
+  position: relative;
+  overflow: hidden;
+  /* Prevent sidebar itself from scrolling */
+}
+
+.config-controls__content {
+  flex: 1;
+  overflow-y: auto;
+  /* Only components scroll */
+  padding-right: 10px;
+  /* Space for scrollbar */
+  margin-bottom: 1.5rem;
+}
+
+.config-footer {
+  margin-top: 0;
+  padding: 1.5rem 0 0 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg-3);
+  flex-shrink: 0;
+  /* Never shrink the button area */
+}
+
+/* Scrollbar styling for a premium feel */
+.config-controls__content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.config-controls__content::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+.config-controls__content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+@media (max-width: 1000px) {
+  .config-modal__inner {
+    grid-template-columns: 1fr;
+    height: auto;
+    max-height: none;
+    overflow-y: auto;
+  }
+
+  .config-controls {
+    height: auto;
+    overflow: visible;
+  }
+
+  .config-controls__content {
+    overflow: visible;
+    max-height: none;
+  }
+}
+
 /* ── Info Modal ── */
 .info-modal {
   position: fixed;

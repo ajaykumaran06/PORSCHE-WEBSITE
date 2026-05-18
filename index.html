@@ -499,91 +499,93 @@
           <button class="config-tab" onclick="showConfigTab('wheels', event)">Wheels</button>
         </div>
 
-        <div class="config-panel active" id="panel-model">
-          <div class="config-option-list">
-            <button class="config-option active" onclick="selectModel('911 Carrera', event)">
-              <span class="option-name">911 Carrera</span>
-              <span class="option-price">€ 124,580</span>
-            </button>
-            <button class="config-option" onclick="selectModel('Taycan', event)">
-              <span class="option-name">Taycan</span>
-              <span class="option-price">€ 92,100</span>
-            </button>
-            <button class="config-option" onclick="selectModel('718 Cayman', event)">
-              <span class="option-name">718 Cayman</span>
-              <span class="option-price">€ 68,400</span>
-            </button>
-            <button class="config-option" onclick="selectModel('Panamera', event)">
-              <span class="option-name">Panamera</span>
-              <span class="option-price">€ 112,000</span>
-            </button>
-            <button class="config-option" onclick="selectModel('Macan', event)">
-              <span class="option-name">Macan</span>
-              <span class="option-price">€ 75,000</span>
-            </button>
-            <button class="config-option" onclick="selectModel('Cayenne', event)">
-              <span class="option-name">Cayenne</span>
-              <span class="option-price">€ 89,000</span>
-            </button>
+        <div class="config-controls__content">
+          <div class="config-panel active" id="panel-model">
+            <div class="config-option-list">
+              <button class="config-option active" onclick="selectModel('911 Carrera', event)">
+                <span class="option-name">911 Carrera</span>
+                <span class="option-price">€ 124,580</span>
+              </button>
+              <button class="config-option" onclick="selectModel('Taycan', event)">
+                <span class="option-name">Taycan</span>
+                <span class="option-price">€ 92,100</span>
+              </button>
+              <button class="config-option" onclick="selectModel('718 Cayman', event)">
+                <span class="option-name">718 Cayman</span>
+                <span class="option-price">€ 68,400</span>
+              </button>
+              <button class="config-option" onclick="selectModel('Panamera', event)">
+                <span class="option-name">Panamera</span>
+                <span class="option-price">€ 112,000</span>
+              </button>
+              <button class="config-option" onclick="selectModel('Macan', event)">
+                <span class="option-name">Macan</span>
+                <span class="option-price">€ 75,000</span>
+              </button>
+              <button class="config-option" onclick="selectModel('Cayenne', event)">
+                <span class="option-name">Cayenne</span>
+                <span class="option-price">€ 89,000</span>
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div class="config-panel" id="panel-exterior">
-          <p class="config-panel__label mono">Paint Colour</p>
-          <div class="config-color-grid">
-            <button class="color-circle active" style="--c:#ffffff" onclick="selectColor('Carrara White', 0, event)"
-              title="Carrara White"></button>
-            <button class="color-circle" style="--c:#000000" onclick="selectColor('Jet Black', 1200, event)"
-              title="Jet Black"></button>
-            <button class="color-circle" style="--c:#9b1a1a" onclick="selectColor('Guards Red', 0, event)"
-              title="Guards Red"></button>
-            <button class="color-circle" style="--c:#1a3a6b" onclick="selectColor('Gentian Blue', 1500, event)"
-              title="Gentian Blue"></button>
-            <button class="color-circle" style="--c:#2d4a2d" onclick="selectColor('Python Green', 2800, event)"
-              title="Python Green"></button>
-            <button class="color-circle" style="--c:#d2d2d2" onclick="selectColor('Chalk', 3200, event)"
-              title="Chalk"></button>
-            <button class="color-circle" style="--c:#f9d71c" onclick="selectColor('Racing Yellow', 0, event)"
-              title="Racing Yellow"></button>
-            <button class="color-circle" style="--c:#1e81b0" onclick="selectColor('Shark Blue', 3500, event)"
-              title="Shark Blue"></button>
+          <div class="config-panel" id="panel-exterior">
+            <p class="config-panel__label mono">Paint Colour</p>
+            <div class="config-color-grid">
+              <button class="color-circle active" style="--c:#ffffff" onclick="selectColor('Carrara White', 0, event)"
+                title="Carrara White"></button>
+              <button class="color-circle" style="--c:#000000" onclick="selectColor('Jet Black', 1200, event)"
+                title="Jet Black"></button>
+              <button class="color-circle" style="--c:#9b1a1a" onclick="selectColor('Guards Red', 0, event)"
+                title="Guards Red"></button>
+              <button class="color-circle" style="--c:#1a3a6b" onclick="selectColor('Gentian Blue', 1500, event)"
+                title="Gentian Blue"></button>
+              <button class="color-circle" style="--c:#2d4a2d" onclick="selectColor('Python Green', 2800, event)"
+                title="Python Green"></button>
+              <button class="color-circle" style="--c:#d2d2d2" onclick="selectColor('Chalk', 3200, event)"
+                title="Chalk"></button>
+              <button class="color-circle" style="--c:#f9d71c" onclick="selectColor('Racing Yellow', 0, event)"
+                title="Racing Yellow"></button>
+              <button class="color-circle" style="--c:#1e81b0" onclick="selectColor('Shark Blue', 3500, event)"
+                title="Shark Blue"></button>
+            </div>
+            <p id="selected-color-name" class="config-selection-name">Carrara White</p>
           </div>
-          <p id="selected-color-name" class="config-selection-name">Carrara White</p>
-        </div>
 
-        <div class="config-panel" id="panel-interior">
-          <p class="config-panel__label mono">Interior Trim</p>
-          <div class="config-option-list">
-            <button class="config-option active" onclick="selectInterior('Standard Black', 0, event)">
-              <span class="option-name">Standard Interior in Black</span>
-              <span class="option-price">Included</span>
-            </button>
-            <button class="config-option" onclick="selectInterior('Leather Black/Bordeaux Red', 4500, event)">
-              <span class="option-name">Two-tone Leather Interior</span>
-              <span class="option-price">+ € 4,500</span>
-            </button>
-            <button class="config-option" onclick="selectInterior('Race-Tex with Carbon', 6200, event)">
-              <span class="option-name">Race-Tex Interior with Carbon</span>
-              <span class="option-price">+ € 6,200</span>
-            </button>
+          <div class="config-panel" id="panel-interior">
+            <p class="config-panel__label mono">Interior Trim</p>
+            <div class="config-option-list">
+              <button class="config-option active" onclick="selectInterior('Standard Black', 0, event)">
+                <span class="option-name">Standard Interior in Black</span>
+                <span class="option-price">Included</span>
+              </button>
+              <button class="config-option" onclick="selectInterior('Leather Black/Bordeaux Red', 4500, event)">
+                <span class="option-name">Two-tone Leather Interior</span>
+                <span class="option-price">+ € 4,500</span>
+              </button>
+              <button class="config-option" onclick="selectInterior('Race-Tex with Carbon', 6200, event)">
+                <span class="option-name">Race-Tex Interior with Carbon</span>
+                <span class="option-price">+ € 6,200</span>
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div class="config-panel" id="panel-wheels">
-          <p class="config-panel__label mono">Wheels</p>
-          <div class="config-option-list">
-            <button class="config-option active" onclick="selectWheels('19-inch Carrera', 0, event)">
-              <span class="option-name">19-inch Carrera Wheels</span>
-              <span class="option-price">Included</span>
-            </button>
-            <button class="config-option" onclick="selectWheels('20/21-inch Carrera S', 2800, event)">
-              <span class="option-name">20/21-inch Carrera S Wheels</span>
-              <span class="option-price">+ € 2,800</span>
-            </button>
-            <button class="config-option" onclick="selectWheels('20/21-inch RS Spyder', 4200, event)">
-              <span class="option-name">20/21-inch RS Spyder Design</span>
-              <span class="option-price">+ € 4,200</span>
-            </button>
+          <div class="config-panel" id="panel-wheels">
+            <p class="config-panel__label mono">Wheels</p>
+            <div class="config-option-list">
+              <button class="config-option active" onclick="selectWheels('19-inch Carrera', 0, event)">
+                <span class="option-name">19-inch Carrera Wheels</span>
+                <span class="option-price">Included</span>
+              </button>
+              <button class="config-option" onclick="selectWheels('20/21-inch Carrera S', 2800, event)">
+                <span class="option-name">20/21-inch Carrera S Wheels</span>
+                <span class="option-price">+ € 2,800</span>
+              </button>
+              <button class="config-option" onclick="selectWheels('20/21-inch RS Spyder', 4200, event)">
+                <span class="option-name">20/21-inch RS Spyder Design</span>
+                <span class="option-price">+ € 4,200</span>
+              </button>
+            </div>
           </div>
         </div>
 
